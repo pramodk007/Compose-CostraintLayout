@@ -1,3 +1,6 @@
 <resources>
     <string name="app_name">Compose-CostraintLayout-v1</string>
+    <string name="button1">buttonOne</string>
+    <string name="someArgs">something is there</string>
+    <string name="buttonTwo">buttonTwo</string>
 </resources>
