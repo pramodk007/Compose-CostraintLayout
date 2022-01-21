@@ -22,6 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.constraintlayout.compose.ChainStyle
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -265,8 +266,8 @@ fun ConstraintLayoutUsingConstraintSet() {
         )
         TextField(
             value = password,
-            onValueChange = {password = it},
-            label = { Text(text = "Password")},
+            onValueChange = { password = it },
+            label = { Text(text = "Password") },
             modifier = Modifier.layoutId("inputPassword")
         )
         Button(
@@ -282,6 +283,132 @@ fun ConstraintLayoutUsingConstraintSet() {
             Text(text = "Submit")
         }
 
+    }
+}
+
+@Preview
+@Composable
+fun ConstraintLayoutGuideLine() {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .padding(12.dp)
+    ) {
+        val (input, text1, text2, text3) = createRefs()
+        val guidelineFromTop = createGuidelineFromTop(0.7f)
+        val guidelineFromStart = createGuidelineFromStart(0.2f)
+        val guidelineFromEnd = createGuidelineFromEnd(0.2f)
+        val guidelineFromBottom = createGuidelineFromBottom(0.2f)
+
+        Text(
+            text = "Attached to top guideLine ",
+            modifier = Modifier.constrainAs(input) {
+                top.linkTo(guidelineFromTop, 8.dp)
+                start.linkTo(parent.start, 8.dp)
+                end.linkTo(parent.end, 8.dp)
+            }
+        )
+        Text(
+            text = "Attached to starting guideLine",
+            modifier = Modifier.constrainAs(text1) {
+                start.linkTo(guidelineFromStart, 8.dp)
+            }
+        )
+        Text(
+            text = "Attached to Ending guideLine",
+            modifier = Modifier.constrainAs(text2) {
+                end.linkTo(guidelineFromEnd, 8.dp)
+            }
+        )
+
+        Text(
+            text = "Attached to Bottom guideLine",
+            modifier = Modifier.constrainAs(text3) {
+                bottom.linkTo(guidelineFromBottom, 8.dp)
+            }
+        )
+    }
+}
+@Preview
+@Composable
+fun ConstraintLayoutBarrier() {
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+    ) {
+        val (text1,text2,text3,text4,text5) = createRefs()
+
+        val barrierStart = createStartBarrier(text1,text2)
+        val barrierEnd = createEndBarrier(text4)
+        Text(
+            text = "hello there...",
+            modifier = Modifier.constrainAs(text1){
+                top.linkTo(parent.top,8.dp)
+                start.linkTo(parent.start,8.dp)
+            }
+        )
+
+        Text(text = "hello another one", modifier = Modifier.constrainAs(text2) {
+            top.linkTo(text1.bottom,8.dp)
+            start.linkTo(parent.start,8.dp)
+        })
+
+        Text(text = "attached to the starting barrier", modifier = Modifier.constrainAs(text3) {
+            top.linkTo(text2.bottom,8.dp)
+            start.linkTo(barrierStart,8.dp)
+        })
+
+        Text(text = "hello number three", modifier = Modifier.constrainAs(text4){
+            top.linkTo(parent.top)
+            end.linkTo(parent.end)
+        })
+        Text(text = "attached to the ending barrier", modifier = Modifier.constrainAs(text5) {
+            top.linkTo(text4.bottom,8.dp)
+            end.linkTo(barrierEnd,8.dp)
+        })
+
+    }
+
+}
+@Preview
+@Composable
+fun ConstraintLayoutChains(){
+    ConstraintLayout(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(12.dp)
+    ) {
+        val (button1,button2,button3) = createRefs()
+
+        createHorizontalChain(button1,button2,button3, chainStyle = ChainStyle.SpreadInside)
+        
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier.constrainAs(button1){
+                centerHorizontallyTo(parent)
+            }
+        ) {
+            Text(text = "ButtonOne")
+        }
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier.constrainAs(button2){
+                centerVerticallyTo(parent)
+            }
+        ) {
+            Text(text = "ButtonTwo")
+        }
+
+        Button(
+            onClick = { /*TODO*/ },
+            modifier = Modifier.constrainAs(button3){
+                centerHorizontallyTo(parent)
+            }
+        ) {
+            Text(text = "ButtonThree")
+        }
     }
 }
 
